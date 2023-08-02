@@ -1,0 +1,2 @@
+#!/bin/bash
+(printf '%s\n' ./* && printf '%s\n' ./*/*) | sed -e 's/^\.\///g' -e 's/$/\//' -e '/^\.\//d' | LC_ALL=C sort -d -f -k1.1 | tr '\n' ', ' && printf '\n'
