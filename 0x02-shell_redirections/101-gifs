@@ -1,0 +1,2 @@
+#!/bin/bash
+find . -type f -iname "*.gif" -exec sh -c 'filename="${1##*/}"; echo "${filename%.*}"' sh {} \; | sort -f
