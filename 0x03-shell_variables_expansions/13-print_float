@@ -1,2 +1,2 @@
 #!/bin/bash
-echo -e "$NUM.00 " | tr ' ' '\n'
+printf "%.2f\n" $NUM  
