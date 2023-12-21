@@ -1,0 +1,16 @@
+#!/bin/bash
+
+file="/etc/passwd"
+
+# Check if the file exists
+if [ -e "$file" ]; then
+    # Use a while loop to read and display each line
+    while IFS=: read -r username uid gid info homedir shell; do
+        # Display the story with the shell only
+        echo "The user $username is part of the $gid gang, lives in $homedir, and rides $shell."
+        echo "${gid}'s place is protected by the passcode $info, more info about the user here: $uid $info"
+        echo
+    done < "$file"
+else
+    echo "File not found: $file"
+fi
