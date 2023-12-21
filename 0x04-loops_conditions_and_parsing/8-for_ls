@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#  Bash script that display files info
 
 for item in *; do
     echo "${item#*-}"
