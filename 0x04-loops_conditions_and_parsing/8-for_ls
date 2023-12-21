@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+for item in *; do
+    echo "${item#*-}"
+done

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+file_name="school"
+
+# Check if the file exists
+if [ -e "$file_name" ]; then
+    echo "school file exists."
+
+    # Check if the file is empty
+    if [ -s "$file_name" ]; then
+        echo "school file is not empty."
+    else
+        echo "school file is empty."
+    fi
+
+    # Check if the file is a regular file
+    if [ -f "$file_name" ]; then
+        echo "school is a regular file."
+    else
+        # If the file is not a regular file, print nothing
+        :
+    fi
+else
+    echo "school file does not exist."
+fi
