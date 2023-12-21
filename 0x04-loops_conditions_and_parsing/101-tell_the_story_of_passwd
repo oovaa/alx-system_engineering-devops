@@ -4,13 +4,13 @@
 file="/etc/passwd"
 
 while IFS= read -r line; do
-  user=$(echo "$line" | cut -d ':' -f1)
-  pass=$(echo "$line" | cut -d ':' -f2)
-  uid=$(echo "$line" | cut -d ':' -f3)
-  gid=$(echo "$line" | cut -d ':' -f4)
-  info=$(echo "$line" | cut -d ':' -f5)
-  dir=$(echo "$line" | cut -d ':' -f6)
-  shell=$(echo "$line" | cut -d ':' -f7)
+    user=$(echo "$line" | cut -d ':' -f1)
+    pass=$(echo "$line" | cut -d ':' -f2)
+    uid=$(echo "$line" | cut -d ':' -f3)
+    gid=$(echo "$line" | cut -d ':' -f4)
+    info=$(echo "$line" | cut -d ':' -f5)
+    dir=$(echo "$line" | cut -d ':' -f6)
+    shell=$(echo "$line" | cut -d ':' -f7)
 
-  echo "The user $user is part of the $gid gang, lives in $dir and rides $shell. $uid's place is protected by the passcode $pass, more info about the user here: $info"
-done < "$file"
+    echo "The user $user is part of the $gid gang, lives in $dir and rides $shell. $uid's place is protected by the passcode $pass, more info about the user here: $info"
+done <"$file"
