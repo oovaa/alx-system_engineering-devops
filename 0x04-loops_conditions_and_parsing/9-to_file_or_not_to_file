@@ -1,4 +1,5 @@
 #!/bin/bash
+# Bash script that gives you information about the school file.
 
 file_name="school"
 
