@@ -8,10 +8,9 @@ if [ ! -e "$file" ]; then
 fi
 sleep 2 &
 
-echo "$!" > "$file"
+echo "$!" >"$file"
 
-trap 'echo I hate the kill command' SIGTERM
-trap '[ -e "$file" ] && rm "$file"; exit 0' SIGQUIT SIGTERM
+trap 'echo "I hate the kill command"; rm "$file"; exit' SIGTERM SIGQUIT
 trap 'echo Y U no love me?!' SIGINT
 
 while true; do
