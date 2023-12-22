@@ -14,15 +14,14 @@ if [ "$1" == 'start' ]; then
     echo "$!" >$idfile
 
 elif [ "$1" == 'restart' ]; then
-    pkill -f manage_my_process
-    rm $idfile
+    pkill -F "$idfile"
+    rm "$idfile"
     bash ./manage_my_process &
-    echo "$!" >$idfile
+    echo "$!" >"$idfile"
     echo "manage_my_process restarted"
 
 elif [ "$1" == 'stop' ]; then
-    pkill -f manage_my_process
-    rm $idfile
+    [ -e "/var/run/my_process.pid" ] && pkill -f './manage_my_process' && rm /var/run/my_process.pid
     echo "manage_my_process stopped"
 
 fi
