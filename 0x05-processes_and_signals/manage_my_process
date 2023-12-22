@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+file='/tmp/my_process'
+
+if [ ! -e $file ]; then
+    touch $file
+fi
+
+while true; do
+    echo "I am alive!" >>$file
+    sleep 2
+done

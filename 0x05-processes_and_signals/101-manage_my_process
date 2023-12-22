@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# the init script
+
+idfile='/var/run/my_process.pid'
+
+if [ $# -ne 1 ]; then
+    echo "Usage: manage_my_process {start|stop|restart}"
+    exit 1
+fi
+
+if [ "$1" == 'start' ]; then
+    bash ./manage_my_process &
+    echo "manage_my_process started"
+    echo "$!" >$idfile
+
+elif [ "$1" == 'restart' ]; then
+    pkill -f manage_my_process
+    rm $idfile
+    bash ./manage_my_process &
+    echo "$!" >$idfile
+    echo "manage_my_process restarted"
+
+elif [ "$1" == 'stop' ]; then
+    pkill -f manage_my_process
+    rm $idfile
+    echo "manage_my_process stopped"
+
+fi
