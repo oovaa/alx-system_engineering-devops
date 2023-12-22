@@ -2,15 +2,16 @@
 # advanced task 1
 
 file="/var/run/myscript.pid"
+
 if [ ! -e "$file" ]; then
     touch "$file"
 fi
 sleep 2 &
 
-echo "$!" >$file
+echo "$!" > "$file"
 
 trap 'echo I hate the kill command' SIGTERM
-trap 'rm /var/run/myscript.pid; exit 0' SIGQUIT SIGTERM
+trap '[ -e "$file" ] && rm "$file"; exit 0' SIGQUIT SIGTERM
 trap 'echo Y U no love me?!' SIGINT
 
 while true; do
