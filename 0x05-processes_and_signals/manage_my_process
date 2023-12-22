@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# the dum script
 
 file='/tmp/my_process'
 
