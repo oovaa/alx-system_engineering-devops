@@ -1,2 +1,6 @@
-513331-web-01
+Host 513331-web-01
+    HostName 54.165.78.43
+    User ubuntu
+	PasswordAuthentication no
+    IdentityFile ./school
     
