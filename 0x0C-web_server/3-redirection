@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Create a new Nginx configuration file for the redirection
+echo "server {
+    listen 80;
+    server_name _;
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    # Add other server configurations if needed
+}" >/etc/nginx/sites-available/redirect_me
+
+# Create a symbolic link to enable the new configuration
+ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+
+# Test Nginx configuration
+nginx -t
+
+# Reload Nginx to apply the changes
+service nginx reload
+
+echo "Redirection configured successfully. ✅"
