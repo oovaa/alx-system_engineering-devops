@@ -1,42 +1,29 @@
-#!/usr/bin/env bash
-# Configures a new ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
+#!/bin/bash
 
-sudo apt-get update -y && sduo apt-get install nginx -y
+# Update the package lists for upgrades and new package installations
+apt-get update
 
-# starting nginx service
-sudo service nginx start
+# Install nginx
+apt-get install -y nginx
 
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
+# Remove the default nginx configuration
+rm /etc/nginx/sites-enabled/default
 
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
+# Create a new nginx configuration
+printf "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html;
+    server_name _;
+    location / {
+        return 200 'Hello World!\n';
+        add_header Content-Type text/plain;
+    }
+}" >/etc/nginx/sites-available/default
 
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+# Enable the new configuration
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 
-# Creating new index
-echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
-
-# Restarting nginx
-sudo service nginx restart
-
-# This script installs the Nginx web server on the local machine.
-
-# Documentation:
-# This script is used to install the Nginx web server on the local machine. It can be executed to set up a web server environment for hosting websites or web applications. The script installs the necessary packages and configures the server to start automatically on boot. After running this script, the Nginx web server will be up and running, ready to serve web content.
-
-# This script is used to install the Nginx web server on the local machine.
-# It ensures that the necessary dependencies are installed and then proceeds
-# to install Nginx. This script is intended to be run on a Linux-based system.
-# It can be executed by running the following command:
-#
-#     ./1-install_nginx_web_server
-#
-# After running the script, Nginx will be installed and ready to use.
-# It adds the necessary commands to install Nginx and starts the service.
-# The script assumes that the user has the necessary permissions to install packages and start services.
-# It is recommended to run this script with root privileges or using sudo.
+# Restart nginx
+service nginx restart

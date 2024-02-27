@@ -21,7 +21,10 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 # Creating new index
 echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
 
-# Add redirect line at line 24
+# Remove existing location block for "/redirect_me"
+sudo sed -i '/location \/redirect_me {/,/}/d' /etc/nginx/sites-available/default
+
+# Add new redirect location block at line 24
 sudo sed -i '24i\        location /redirect_me {\n            return 301 https://youtu.be/nXLnx8ncZyE;\n        }' /etc/nginx/sites-available/default
 
 # Reload Nginx to apply the changes
