@@ -31,11 +31,9 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 # Creating new index
 echo -e "Hello World!" >/var/www/html/index.nginx-debian.html
 
-## Check if the redirection is already in the configuration file
-if ! sudo grep -q "location /redirect_me" /etc/nginx/sites-available/default; then
-    # If it's not, add it
-    sudo sed -i '10i\    location /redirect_me {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n    }' /etc/nginx/sites-available/default
-fi
+# Setting up /redirect_me to a youtube video
+sudo sed -i '10i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+
 # Restarting nginx
 sudo service nginx restart
 
