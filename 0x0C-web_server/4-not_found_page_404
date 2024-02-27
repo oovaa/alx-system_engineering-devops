@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
+
+set -e
+
+sudo apt-get update -y && sudo apt-get install nginx -y
+
+# starting nginx service
+sudo service nginx start
+
+# allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
+
+# Give the user ownership to website files for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+
+# Creating new index
+echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
+
+# Add redirect line at line 24
+sudo sed -i '24i\        location /redirect_me {\n            return 301 https://youtu.be/nXLnx8ncZyE;\n        }' /etc/nginx/sites-available/default
+
+# Create custom error page
+echo "Ceci n'est pas une page" >>/var/www/html/error_404.html
+
+# Update Nginx configuration to use custom error page
+sudo sed -i '25i\        error_page 404 /error_404.html;' /etc/nginx/sites-available/default
+
+# Reload Nginx to apply the changes
+sudo nginx -t
+sudo service nginx reload
