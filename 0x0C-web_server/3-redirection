@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-bash ./1-install_nginx_web_server
+# Check if Nginx is installed
+if ! command -v nginx &>/dev/null; then
+    echo "Nginx is not installed. Installing now..."
+    sudo apt-get update -y -qq && sudo apt-get install nginx -y -qq
+fi
 
 # Create a new Nginx configuration file for the redirection
 echo "server {
@@ -22,5 +26,3 @@ nginx -t
 
 # Reload Nginx to apply the changes
 service nginx reload
-
-echo "Redirection configured successfully. ✅"
