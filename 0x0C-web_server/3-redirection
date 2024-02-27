@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Configures a new ubuntu machine by installing Nginx and setting up a redirect from /redirect_me to a YouTube video
-
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
+#
 # colors
 blue='\e[1;34m'
 brown='\e[0;33m'
