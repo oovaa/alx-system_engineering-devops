@@ -18,5 +18,6 @@ if ! grep -q "location /redirect_me" /etc/nginx/sites-available/default; then
     sed -i '11i\    location /redirect_me {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n    }' /etc/nginx/sites-available/default
 fi
 
+sudo nginx -t
 # Restart nginx
 service nginx restart

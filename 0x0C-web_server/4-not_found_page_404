@@ -10,25 +10,21 @@ apt-get install nginx -y
 # Start nginx service
 service nginx start
 
-ufw allow 'Nginx HTTP'
-
 # Create a new index.html file with 'Hello World!'
 echo 'Hello World!' >/var/www/html/index.html
 
 # Create a custom 404 page
 echo "Ceci n'est pas une page" >/var/www/html/404.html
 
-# Add redirect rule to the existing nginx configuration if it doesn't exist
-if ! grep -q "location /redirect_me" /etc/nginx/sites-available/default; then
-    sed -i '11i\    location /redirect_me {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n    }' /etc/nginx/sites-available/default
-fi
-
 # Add custom 404 page to the existing nginx configuration if it doesn't exist
 if ! grep -q "error_page 404" /etc/nginx/sites-available/default; then
     sed -i '/server_name _;/a\    error_page 404 /404.html;' /etc/nginx/sites-available/default
 fi
 
-nginx -t
+# Add location block for 404 page if it doesn't exist
+if ! grep -q "location = /404.html" /etc/nginx/sites-available/default; then
+    sed -i '/error_page 404 \/404.html;/a\    location = /404.html {\n        root /var/www/html;\n        internal;\n    }' /etc/nginx/sites-available/default
+fi
 
 # Restart nginx
 service nginx restart
