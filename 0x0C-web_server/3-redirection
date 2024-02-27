@@ -1,23 +1,32 @@
 #!/usr/bin/env bash
-# This script installs nginx, configures it to display 'Hello World!', and sets up a redirect for /redirect_me
 
-# Update the package lists for upgrades and new package installations
-apt-get update -y -qq
+# Update packages and Install Nginx
+echo "Updating packages and installing Nginx..."
+sudo apt-get update -y
+sudo apt-get install nginx -y
 
-# Install nginx
-apt-get install nginx -y
+# Start Nginx service
+echo "Starting Nginx..."
+sudo service nginx start
 
-# Start nginx service
-service nginx start
+# Overwrite Nginx default configuration
+echo "Configuring Nginx for redirection..."
+echo 'server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html;
+    server_name _;
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}' | sudo tee /etc/nginx/sites-available/default
 
-# Create a new index.html file with 'Hello World!'
-echo 'Hello World!' >/var/www/html/index.html
+# Restart Nginx to apply changes
+echo "Restarting Nginx..."
+sudo service nginx restart
 
-# Add redirect rule to the existing nginx configuration if it doesn't exist
-if ! grep -q "location /redirect_me" /etc/nginx/sites-available/default; then
-    sed -i '11i\    location /redirect_me {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n    }' /etc/nginx/sites-available/default
-fi
-
-sudo nginx -t
-# Restart nginx
-service nginx restart
+echo "Nginx configured successfully."
