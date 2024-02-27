@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# This script installs nginx, configures it to display 'Hello World!', and sets up a redirect for /redirect_me
+
 # Update the package lists for upgrades and new package installations
 apt-get update
 
