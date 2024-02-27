@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
 
-# Check if Nginx is installed
-if ! command -v nginx &>/dev/null; then
-    echo "Nginx is not installed. Installing now..."
-    sudo apt-get update -y -qq && sudo apt-get install nginx -y -qq
-fi
+sudo apt-get update -y && sudo apt-get install nginx -y
 
-# Create a new Nginx configuration file for the redirection
-echo "server {
-    listen 80;
-    server_name _;
+# starting nginx service
+sudo service nginx start
 
-    location /redirect_me {
-        return 301 https://youtu.be/nXLnx8ncZyE;
-    }
+# allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
 
-    # Add other server configurations if needed
-}" >/etc/nginx/sites-available/redirect_me
+# Give the user ownership to website files for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
 
-# Create a symbolic link to enable the new configuration
-ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 
-# Test Nginx configuration
-nginx -t
+# Creating new index
+echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
+
+# Add redirect line at line 24
+sudo sed -i '24i\        location /redirect_me {\n            return 301 https://youtu.be/nXLnx8ncZyE;\n        }' /etc/nginx/sites-available/default
 
 # Reload Nginx to apply the changes
-service nginx reload
+sudo service nginx reload
