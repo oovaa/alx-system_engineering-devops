@@ -1,0 +1,39 @@
+# FILEPATH
+
+# This code performs a sed command with various flags.
+# Sed is a stream editor for filtering and transforming text.
+# The flags used in this command are explained below.
+
+# -e: Specifies the script to be executed.
+# -i: Edits files in-place, i.e., modifies the file directly.
+# -n: Suppresses automatic printing of pattern space.
+# -r: Enables extended regular expressions.
+# -s: Substitutes the first occurrence of a pattern with a replacement.
+
+# Example usage:
+# sed -e 's/foo/bar/' input.txt
+# This command replaces the first occurrence of 'foo' with 'bar' in the file 'input.txt'.
+
+# sed -i.bak -e 's/foo/bar/g' file1.txt file2.txt
+# This command replaces all occurrences of 'foo' with 'bar' in 'file1.txt' and 'file2.txt',
+# and creates backup files with the extension '.bak'.
+
+# sed -n -e '/pattern/p' input.txt
+# This command prints only the lines that match the pattern in the file 'input.txt'.
+
+# sed -r -e 's/(pattern1|pattern2)/replacement/g' input.txt
+# This command replaces all occurrences of 'pattern1' or 'pattern2' with 'replacement' in the file 'input.txt',
+# using extended regular expressions.
+
+# sed -s -e 's/foo/bar/' input.txt
+# This command substitutes the first occurrence of 'foo' with 'bar' in each line of the file 'input.txt'.
+
+# Note: The examples provided are for illustration purposes only.
+# The actual usage of sed commands may vary based on specific requirements.
+
+This is line 1.
+This is line 2.
+This is tata 3.
+This is line 4.
+This is line 5.
+
