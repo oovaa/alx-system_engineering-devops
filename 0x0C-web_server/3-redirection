@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-# Configures a new ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
-#
+# This script installs Nginx on a new Ubuntu machine, sets up a page that returns "Hello World", and configures a 301 redirect from /redirect_me to a YouTube video
+
 # colors
 blue='\e[1;34m'
 brown='\e[0;33m'
@@ -39,7 +37,7 @@ echo 'server {
     index index.nginx-debian.html;
     server_name _;
     location / {
-        try_files $uri $uri/ =404;
+        try_files $uri $uri/;
     }
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
