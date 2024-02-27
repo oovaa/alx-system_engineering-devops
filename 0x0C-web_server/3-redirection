@@ -2,7 +2,7 @@
 # Configures a new ubuntu machine by installing
 # Nginx where it should be listening on port 80
 # Serve a page that would return a Hello World string
-#
+
 # colors
 blue='\e[1;34m'
 brown='\e[0;33m'
@@ -17,16 +17,6 @@ echo -e "\n${blue}Setting up some minor stuff.${reset}\n"
 
 # starting nginx service
 sudo service nginx start
-
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
-
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
-
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 
 # Creating new index
 echo -e "Hello World!" >/var/www/html/index.nginx-debian.html
