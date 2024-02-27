@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Configure your Nginx server so that /redirect_me is redirecting to another page.
+# This script installs Nginx, configures a redirect from /redirect_me to a YouTube video, and restarts Nginx
 
 # Update packages and Install Nginx
 echo "Updating packages and installing Nginx..."
