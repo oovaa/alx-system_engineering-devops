@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+bash ./1-install_nginx_web_server
+
 # Create a new Nginx configuration file for the redirection
 echo "server {
     listen 80;
     server_name _;
 
     location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        return 301 https://youtu.be/nXLnx8ncZyE;
     }
 
     # Add other server configurations if needed
