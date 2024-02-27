@@ -1,22 +1,40 @@
 #!/usr/bin/env bash
-# This script installs Nginx, configures a redirect from /redirect_me to a YouTube video, and restarts Nginx
+# Configures a new ubuntu machine by installing Nginx and setting up a redirect from /redirect_me to a YouTube video
 
-# Update packages and Install Nginx
-echo "Updating packages and installing Nginx..."
-apt-get update -y
-apt-get install nginx -y
+# colors
+blue='\e[1;34m'
+brown='\e[0;33m'
+green='\e[1;32m'
+reset='\033[0m'
 
-# Start Nginx service
-echo "Starting Nginx..."
-service nginx start
+echo -e "${blue}Updating and installing ${brown}Nginx${blue}.${reset}\n"
+sudo apt-get update -y -qq &&
+    sudo apt-get install nginx -y
 
-# Overwrite Nginx default configuration
-echo "Configuring Nginx for redirection..."
+echo -e "\n${blue}Setting up some minor stuff.${reset}\n"
+
+# starting nginx service
+sudo service nginx start
+
+# allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
+
+# Give the user ownership to website files for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+
+# Creating new index
+echo -e "Hello World!" >/var/www/html/index.nginx-debian.html
+
+# Overwrite Nginx default configuration with redirection
 echo 'server {
     listen 80 default_server;
     listen [::]:80 default_server;
     root /var/www/html;
-    index index.html;
+    index index.nginx-debian.html;
     server_name _;
     location / {
         try_files $uri $uri/ =404;
@@ -24,10 +42,9 @@ echo 'server {
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
-}' | tee /etc/nginx/sites-available/default
+}' | sudo tee /etc/nginx/sites-available/default
 
-# Restart Nginx to apply changes
-echo "Restarting Nginx..."
-service nginx restart
+# Restarting nginx
+sudo service nginx restart
 
-echo "Nginx configured successfully."
+echo -e "\n${green}Completed.${reset} ✅\n"
