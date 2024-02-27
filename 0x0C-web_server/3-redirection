@@ -31,8 +31,20 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 # Creating new index
 echo -e "Hello World!" >/var/www/html/index.nginx-debian.html
 
-# Setting up /redirect_me to a youtube video
-sudo sed -i '24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+# Overwrite Nginx default configuration with redirection
+echo 'server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.nginx-debian.html;
+    server_name _;
+    location / {
+        try_files $uri $uri/;
+    }
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}' | sudo tee /etc/nginx/sites-available/default
 
 # Restarting nginx
 sudo service nginx restart
