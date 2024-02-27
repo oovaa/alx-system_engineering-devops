@@ -1,31 +1,32 @@
-#!/usr/bin/env bash
-# Configures a new ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
+#!/bin/bash
 
-sudo apt-get update -y && sudo apt-get install nginx -y
+# Update the package lists for upgrades and new package installations
+apt-get update
 
-# starting nginx service
-sudo service nginx start
+# Install nginx
+apt-get install -y nginx
 
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
+# Remove the default nginx configuration
+rm /etc/nginx/sites-enabled/default
 
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
+# Create a new nginx configuration
+echo "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html;
+    server_name _;
+    location / {
+        return 200 'Hello World!\n';
+        add_header Content-Type text/plain;
+    }
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}" >/etc/nginx/sites-available/default
 
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+# Enable the new configuration
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 
-# Creating new index
-echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
-
-# Remove existing location block for "/redirect_me"
-sudo sed -i '/location \/redirect_me {/,/}/d' /etc/nginx/sites-available/default
-
-# Add new redirect location block at line 24
-sudo sed -i '24i\        location /redirect_me {\n            return 301 https://youtu.be/nXLnx8ncZyE;\n        }' /etc/nginx/sites-available/default
-
-# Reload Nginx to apply the changes
-sudo service nginx reload
+# Restart nginx
+service nginx restart

@@ -10,7 +10,7 @@ apt-get install -y nginx
 rm /etc/nginx/sites-enabled/default
 
 # Create a new nginx configuration
-printf "server {
+echo "server {
     listen 80 default_server;
     listen [::]:80 default_server;
     root /var/www/html;
