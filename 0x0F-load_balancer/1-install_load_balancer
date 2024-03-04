@@ -32,7 +32,8 @@ EOL
 
 # Enable HAProxy to start on boot
 echo "Enabling HAProxy to start on boot..."
-sudo systemctl enable haproxy
+# enable haproxy to be started by init script
+echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
 
 # Restart HAProxy to apply the new configuration
 echo "Restarting HAProxy..."
