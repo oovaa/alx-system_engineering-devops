@@ -8,35 +8,34 @@ echo "Updating packages and installing HAProxy..."
 sudo apt update -qq
 sudo apt install haproxy -y -qq
 
-# Define the HAProxy configuration file path
-conffile='/etc/haproxy/haproxy.cfg'
-
 # Write the HAProxy configuration
 echo "Writing HAProxy configuration..."
-sudo bash -c "cat > $conffile" <<EOL
+server_config="
 defaults
-    timeout connect 5000ms
-    timeout client 50000ms
-    timeout server 50000ms
+  mode http
+  timeout client 15s
+  timeout connect 10s
+  timeout server 15s
+  timeout http-request 10s
 
-frontend http_front
-   bind *:80
-   stats uri /haproxy?stats
-   default_backend http_back
+frontend th3gr00t-tech-frontend
+    bind *:80
+    default_backend th3gr00t-tech-backend
 
-backend http_back
-   balance roundrobin
-   server 513331-web-01 54.165.78.43:80 check
-   server 513331-web-02 54.84.65.46:80 check
-EOL
+backend th3gr00t-tech-backend
+    balance roundrobin
+    server 513331-web-01 54.165.78.43:80 check
+    server 513331-web-02 54.84.65.46:80 check
+"
 
-# Enable HAProxy to start on boot
-echo "Enabling HAProxy to start on boot..."
+# shellcheck disable=SC2154
+echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
+
 # enable haproxy to be started by init script
 echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
 
-# Restart HAProxy to apply the new configuration
-echo "Restarting HAProxy..."
-sudo service haproxy restart
-
-echo "HAProxy setup complete."
+if [ "$(pgrep -c haproxy)" -le 0 ]; then
+    sudo service haproxy start
+else
+    sudo service haproxy restart
+fi
