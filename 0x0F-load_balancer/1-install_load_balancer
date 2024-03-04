@@ -18,12 +18,13 @@ defaults
   timeout connect 10s
   timeout server 15s
   timeout http-request 10s
+  option http-keep-alive
 
 frontend th3gr00t-tech-frontend
     bind *:80
-    default_backend th3gr00t-tech-backend
+    default_backend back_end
 
-backend th3gr00t-tech-backend
+backend back_end
     balance roundrobin
     server 513331-web-01 54.165.78.43:80 check
     server 513331-web-02 54.84.65.46:80 check
