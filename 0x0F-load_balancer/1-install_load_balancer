@@ -20,11 +20,11 @@ defaults
   timeout http-request 10s
   option http-keep-alive
 
-frontend th3gr00t-tech-frontend
+frontend oovaa-tech-frontend
     bind *:80
-    default_backend back_end
+    default_backend oovaa-tech-backend
 
-backend back_end
+backend oovaa-tech-backend
     balance roundrobin
     server 513331-web-01 54.165.78.43:80 check
     server 513331-web-02 54.84.65.46:80 check
@@ -36,8 +36,4 @@ echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
 # enable haproxy to be started by init script
 echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
 
-if [ "$(pgrep -c haproxy)" -le 0 ]; then
-    sudo service haproxy start
-else
-    sudo service haproxy restart
-fi
+sudo service haproxy restart
