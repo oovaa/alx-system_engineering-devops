@@ -1,30 +1,27 @@
-# Setup New Ubuntu server with nginx
-# and add a custom HTTP header
-
-exec { 'update system':
-        command => '/usr/bin/apt-get update',
+# Puppet manifest for a configuration file in the server
+# execute 'apt-get update'
+exec { 'apt-update':
+	command => '/usr/bin/apt update'
 }
 
+# install nginx package
 package { 'nginx':
-	ensure => 'installed',
-	require => Exec['update system']
+	require => Exec['apt-update'],
+	ensure  => installed,
 }
 
-file {'/var/www/html/index.html':
-	content => 'Hello World!'
-}
-
-exec {'redirect_me':
-	command => 'sed -i "24i\	rewrite ^/redirect_me https://th3-gr00t.tk/ permanent;" /etc/nginx/sites-available/default',
-	provider => 'shell'
-}
-
-exec {'HTTP header':
-	command => 'sed -i "25i\	add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
-	provider => 'shell'
-}
-
-service {'nginx':
-	ensure => running,
+file { '/var/www/htmlindex.html':
+	ensure  => file,
+	content => 'Hello World!',
 	require => Package['nginx']
+}
+
+exec { 'Redirection':
+	provider => shell,
+	command  => 'sudo sed -i "s#server_name _;#server_name _;\n        location /redirect_me {\n                rewrite ^/redirect_me/?$ https://www.youtube.com/watch?v=dQw4w9WgXcQ permanent;\n        }#" /etc/nginx/sites-available/default ; sudo service nginx restart',
+}
+
+exec { 'custom_header':
+	provider => shell,
+	command  => 'hostname=$(hostname) ; string="\tadd_header X-Served-By \"$hostname\";" ; sudo sed -i "/server_name _;/ a\\ $string\n" /etc/nginx/sites-available/default ; sudo service nginx restart',
 }
