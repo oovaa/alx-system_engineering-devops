@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # 1. Install your load balancer
 
-# Exit if any command fails
-set -e
-
 # Update and install HAProxy
 echo "Updating packages and installing HAProxy..."
 sudo apt update -qq
@@ -11,29 +8,22 @@ sudo apt install haproxy -y -qq
 
 # Write the HAProxy configuration
 echo "Writing HAProxy configuration..."
-server_config="
-defaults
-  mode http
-  timeout client 15s
-  timeout connect 10s
-  timeout server 15s
-  timeout http-request 10s
-  option http-keep-alive
-
-frontend oovaa-tech-frontend
-    bind *:80
-    default_backend oovaa-tech-backend
-
-backend oovaa-tech-backend
-    balance roundrobin
-    server 513331-web-01 54.165.78.43:80 check
-    server 513331-web-02 54.84.65.46:80 check
+server_config=\
+"
+frontend http_front
+	bind *:80
+	mode http
+	default_backend http_back
+backend http_back
+	balance roundrobin
+  server 513331-web-01 54.165.78.43:80 check
+  server 513331-web-02 54.84.65.46:80 check
 "
 
-# shellcheck disable=SC2154
-echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
-# enable haproxy to be started by init script
-echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
+#enable init script
+sudo systemctl enable haproxy
 
+#Restart nginx server
 sudo service haproxy restart
