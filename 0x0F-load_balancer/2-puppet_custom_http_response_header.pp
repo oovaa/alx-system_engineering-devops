@@ -1,4 +1,3 @@
-# execute 'apt-get update'
 exec { 'apt-update':
   command => '/usr/bin/apt update'
 }
@@ -15,9 +14,13 @@ file { '/var/www/html/index.html':
   require => Package['nginx']
 }
 
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => template('nginx/default.erb'),
+# add custom header to nginx configuration
+file_line { 'nginx_custom_header':
+  path    => '/etc/nginx/sites-available/default',
+  line    => '    add_header X-Served-By $hostname;',
+  match   => '^    location / {$',
+  after   => '^    location / {$',
+  require => Package['nginx'],
   notify  => Service['nginx'],
 }
 
