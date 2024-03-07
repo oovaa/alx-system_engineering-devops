@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+touch /etc/nginx/sites-available/subdomain
+
+sub="/etc/nginx/sites-available/subdomain"
+
+echo "
+server {
+    listen 80;
+    server_name subdomain.yourdomain.com;
+
+    root /path/to/subdomain/root;
+    index index.html index.htm;
+
+    location / {
+        # Your additional configurations for the subdomain
+    }
+}
+" >$sub
+
+sudo ln -sf /etc/nginx/sites-available/subdomain /etc/nginx/sites-enabled/
+
+sudo systemctl restart nginx
