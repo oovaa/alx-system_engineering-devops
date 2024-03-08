@@ -1,0 +1,12 @@
+frontend http_front
+    bind *:80
+    bind *:443 ssl crt /etc/letsencrypt/live/www.yourdomain.com/fullchain.pem
+
+    http-request redirect scheme https unless { ssl_fc }
+
+    default_backend http_back
+
+backend http_back
+    balance roundrobin
+    server 513331-web-01 54.165.78.43:80 check
+    server 513331-web-02 54.84.65.46:80 check
