@@ -2,7 +2,7 @@
 # Displays informtation about subdomains.
 
 # variables & parameters
-subdomains=("www" "513331-lb-01" "513331-web-01" "513331-web-02")
+subdomains=("www" "lb-01" "web-01" "web-02")
 domain="$1"
 sub="$2"
 
