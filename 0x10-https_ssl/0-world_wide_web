@@ -1,23 +1,25 @@
 #!/usr/bin/env bash
+# Displays informtation about subdomains.
 
-touch /etc/nginx/sites-available/subdomain
+# variables & parameters
+subdomains=("www" "513331-lb-01" "513331-web-01" "513331-web-02")
+domain="$1"
+sub="$2"
 
-sub="/etc/nginx/sites-available/subdomain"
+dig_cmd() {
+    # func variables
+    sub="$2"
+    INFO="$(dig "$sub.$domain" | grep -A1 'ANSWER SECTION:' | awk 'NR==2')"
+    IP=$(echo "$INFO" | awk '{print $5}')
+    RECORD=$(echo "$INFO" | awk '{print $4}')
 
-echo "
-server {
-    listen 80;
-    server_name subdomain.yourdomain.com;
-
-    root /path/to/subdomain/root;
-    index index.html index.htm;
-
-    location / {
-        # Your additional configurations for the subdomain
-    }
+    echo -e "The subdomain $sub is a $RECORD record and points to $IP"
 }
-" >$sub
 
-sudo ln -sf /etc/nginx/sites-available/subdomain /etc/nginx/sites-enabled/
-
-sudo systemctl restart nginx
+if [ $# -eq 1 ]; then
+    for subs in "${subdomains[@]}"; do
+        dig_cmd "$domain" "$subs"
+    done
+elif [ $# -eq 2 ]; then
+    dig_cmd "$domain" "$sub"
+fi
