@@ -1,0 +1,15 @@
+frontend http_front
+    bind *:80
+    mode http
+    http-request redirect scheme https code 301 if !{ ssl_fc }
+
+frontend https_front
+    bind *:443 ssl crt /etc/haproxy/certs/oovaa.tech.pem
+    mode http
+    default_backend http_back
+
+backend http_back
+    balance roundrobin
+    mode http
+    server 513331-web-01 54.165.78.43:80 check
+    server 513331-web-02 54.165.78.43:80 check
