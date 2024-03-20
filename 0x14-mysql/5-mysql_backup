@@ -17,6 +17,3 @@ mysqldump -u root -p "$password" --all-databases >backup.sql
 
 # Compress the backup
 tar -czvf "${current_date}".tar.gz backup.sql
-
-# Remove the original sql file
-rm backup.sql
