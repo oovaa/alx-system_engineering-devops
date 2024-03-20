@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# backup and compress my databases
+
+if [ -z "$1" ]; then
+    echo "Please supply the MySQL root password as an argument."
+    exit 1
+fi
+
+# Set the password
+password=$1
+
+# Get the current date
+current_date=$(date +%d-%m-%Y)
+
+# Create a backup using mysqldump
+mysqldump -u root -p "$password" --all-databases >backup.sql
+
+# Compress the backup
+tar -czvf "${current_date}".tar.gz backup.sql
+
+# Remove the original sql file
+rm backup.sql
