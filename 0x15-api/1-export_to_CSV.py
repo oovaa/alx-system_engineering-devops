@@ -27,19 +27,6 @@ def fetch_data_and_write_to_csv(employee_id):
         format(employee_id))
     tasks = tasks_res.json()
 
-    # Calculate the number of done tasks and the total number of tasks
-    # Use get to access dictionary value
-    done_tasks = [task for task in tasks if task.get('completed')]
-    number_of_done_tasks = len(done_tasks)
-    total_number_of_tasks = len(tasks)
-
-    print(
-        "Employee {} is done with tasks({}/{})".
-        format(name, number_of_done_tasks, total_number_of_tasks))
-    for task in done_tasks:
-        # Use get to access dictionary value
-        print("\t {}".format(task.get('title')))
-
     # Open the CSV file and write the tasks to it
     with open('{}.csv'.format(employee_id), 'w', newline='') as csvfile:
         taskwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
