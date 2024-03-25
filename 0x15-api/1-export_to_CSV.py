@@ -17,12 +17,14 @@ def fetch_data_and_write_to_csv(employee_id):
 
     # Get the employee's details
     name_res = requests.get(
-        f"https://jsonplaceholder.typicode.com/users/{employee_id}")
+        "https://jsonplaceholder.typicode.com/users/{}".
+        format(employee_id))
     name = name_res.json().get('name')  # Use get to access dictionary value
 
     # Get the employee's tasks
     tasks_res = requests.get(
-        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+        "https://jsonplaceholder.typicode.com/todos?userId={}".
+        format(employee_id))
     tasks = tasks_res.json()
 
     # Calculate the number of done tasks and the total number of tasks
@@ -32,12 +34,14 @@ def fetch_data_and_write_to_csv(employee_id):
     total_number_of_tasks = len(tasks)
 
     print(
-        f"Employee {name} is done with tasks({number_of_done_tasks}/{total_number_of_tasks}):")
+        "Employee {} is done with tasks({}/{})".
+        format(name, number_of_done_tasks, total_number_of_tasks))
     for task in done_tasks:
-        print(f"\t {task.get('title')}")  # Use get to access dictionary value
+        # Use get to access dictionary value
+        print("\t {}".format(task.get('title')))
 
     # Open the CSV file and write the tasks to it
-    with open(f'{employee_id}.csv', 'w', newline='') as csvfile:
+    with open('{}.csv'.format(employee_id), 'w', newline='') as csvfile:
         taskwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         for task in tasks:
             taskwriter.writerow(
@@ -45,6 +49,7 @@ def fetch_data_and_write_to_csv(employee_id):
 
 
 if __name__ == "__main__":
-    # Only run the following code when the script is executed directly (not imported)
+    # Only run the following code when the script is executed directly
+    # (not imported)
     employee_id = argv[1]
     fetch_data_and_write_to_csv(employee_id)
