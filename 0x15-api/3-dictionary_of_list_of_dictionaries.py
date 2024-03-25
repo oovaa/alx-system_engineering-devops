@@ -1,11 +1,9 @@
 #!/usr/bin/python3
+"""Exports data in the JSON format"""
+
 
 import json
 import requests
-
-"""Using what you did in the task #0, extend your
-Python script to export data in the JSON format.
-"""
 
 
 def get_all_tasks():
