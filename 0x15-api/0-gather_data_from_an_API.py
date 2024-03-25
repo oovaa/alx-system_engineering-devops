@@ -1,30 +1,50 @@
 #!/usr/bin/python3
 """
-task 1 APIs
-the api: https://jsonplaceholder.typicode.com/
-
+This module fetches data from the JSONPlaceholder API.
+It retrieves the tasks for a specific user and prints
+the completed tasks.
 """
+
 from sys import argv
 import requests
 
-employee_ID = argv[1]
 
-name_res = requests.get("https://jsonplaceholder.typicode.com/users/{}".
-                        format(employee_ID))
+def print_completed_tasks(employee_ID):
+    """
+    Fetches data from the JSONPlaceholder API for a specific user.
+    Prints the user's completed tasks.
+    """
 
-name = name_res.json()['name']
+    # Get the employee's details
+    name_res = requests.get(
+        "https://jsonplaceholder.typicode.com/users/{}".
+        format(employee_ID))
+    name = name_res.json().get('name')  # Use get to access
+    # dictionary value
 
-tasks_res = requests.get(
-    "https://jsonplaceholder.typicode.com/todos?userId={}".
-    format(employee_ID))
-tasks = tasks_res.json()
+    # Get the employee's tasks
+    tasks_res = requests.get(
+        "https://jsonplaceholder.typicode.com/todos?userId={}".
+        format(employee_ID))
+    tasks = tasks_res.json()
 
-# Calculate the number of done tasks and the total number of tasks
-done_tasks = [task for task in tasks if task['completed']]
-number_of_done_tasks = len(done_tasks)
-total_number_of_tasks = len(tasks)
+    # Calculate the number of done tasks and the total number of tasks
+    # Use get to access dictionary value
+    done_tasks = [task for task in tasks if task.get('completed')]
+    number_of_done_tasks = len(done_tasks)
+    total_number_of_tasks = len(tasks)
 
-print("Employee {} is done with tasks({}/{}):".
-      format(name, number_of_done_tasks, total_number_of_tasks))
-for task in done_tasks:
-    print("\t {}".format(task['title']))
+    print("Employee {} is done with tasks({}/{}):".
+          format(name,
+                 number_of_done_tasks, total_number_of_tasks))
+    for task in done_tasks:
+        # Use get to access dictionary value
+        print("\t {}".
+              format(task.get('title')))
+
+
+if __name__ == "__main__":
+    # Only run the following code when the script is executed directly
+    # (not imported)
+    employee_ID = argv[1]
+    print_completed_tasks(employee_ID)
