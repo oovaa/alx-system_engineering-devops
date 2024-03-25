@@ -5,8 +5,8 @@ It retrieves the tasks for a specific user and prints
 the completed tasks.
 """
 
-from sys import argv
 import requests
+from sys import argv
 
 
 def print_completed_tasks(employee_ID):

@@ -1,38 +1,50 @@
 #!/usr/bin/python3
 """
-task 1 APIs
-the api: https://jsonplaceholder.typicode.com/
-
+This module fetches data from the JSONPlaceholder API.
+It retrieves the tasks for a specific user and writes them to a CSV file.
 """
+
 import csv
-from sys import argv
 import requests
+from sys import argv
 
-employee_ID = argv[1]
 
-name_res = requests.get("https://jsonplaceholder.typicode.com/users/{}".
-                        format(employee_ID))
+def fetch_data_and_write_to_csv(employee_id):
+    """
+    Fetches data from the JSONPlaceholder API for a specific user.
+    Writes the user's tasks to a CSV file.
+    """
 
-name = name_res.json()['name']
+    # Get the employee's details
+    name_res = requests.get(
+        f"https://jsonplaceholder.typicode.com/users/{employee_id}")
+    name = name_res.json().get('name')  # Use get to access dictionary value
 
-tasks_res = requests.get(
-    "https://jsonplaceholder.typicode.com/todos?userId={}".
-    format(employee_ID))
-tasks = tasks_res.json()
+    # Get the employee's tasks
+    tasks_res = requests.get(
+        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+    tasks = tasks_res.json()
 
-# Calculate the number of done tasks and the total number of tasks
-done_tasks = [task for task in tasks if task['completed']]
-number_of_done_tasks = len(done_tasks)
-total_number_of_tasks = len(tasks)
+    # Calculate the number of done tasks and the total number of tasks
+    # Use get to access dictionary value
+    done_tasks = [task for task in tasks if task.get('completed')]
+    number_of_done_tasks = len(done_tasks)
+    total_number_of_tasks = len(tasks)
 
-print("Employee {} is done with tasks({}/{}):".
-      format(name, number_of_done_tasks, total_number_of_tasks))
-for task in done_tasks:
-    print("\t {}".format(task['title']))
+    print(
+        f"Employee {name} is done with tasks({number_of_done_tasks}/{total_number_of_tasks}):")
+    for task in done_tasks:
+        print(f"\t {task.get('title')}")  # Use get to access dictionary value
 
     # Open the CSV file and write the tasks to it
-with open('{}.csv'.format(employee_ID), 'w', newline='') as csvfile:
-    taskwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-    for task in tasks:
-        taskwriter.writerow(
-            [employee_ID, name, task['completed'], task['title']])
+    with open(f'{employee_id}.csv', 'w', newline='') as csvfile:
+        taskwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        for task in tasks:
+            taskwriter.writerow(
+                [employee_id, name, task.get('completed'), task.get('title')])
+
+
+if __name__ == "__main__":
+    # Only run the following code when the script is executed directly (not imported)
+    employee_id = argv[1]
+    fetch_data_and_write_to_csv(employee_id)

@@ -7,8 +7,8 @@ The file is named after the user's ID and contains
 their tasks in a specific format.
 """
 
-import requests
 import json
+import requests
 from sys import argv
 
 
