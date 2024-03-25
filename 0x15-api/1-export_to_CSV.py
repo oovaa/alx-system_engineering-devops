@@ -4,6 +4,7 @@ task 1 APIs
 the api: https://jsonplaceholder.typicode.com/
 
 """
+import csv
 from sys import argv
 import requests
 
@@ -28,3 +29,10 @@ print("Employee {} is done with tasks({}/{}):".
       format(name, number_of_done_tasks, total_number_of_tasks))
 for task in done_tasks:
     print("\t {}".format(task['title']))
+
+    # Open the CSV file and write the tasks to it
+with open('{}.csv'.format(employee_ID), 'w', newline='') as csvfile:
+    taskwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+    for task in tasks:
+        taskwriter.writerow(
+            [employee_ID, name, task['completed'], task['title']])
